@@ -4,19 +4,33 @@ using UnityEngine;
 
 public class PlayerPhisic : MonoBehaviour
 {
-    private Rigidbody rb;
-    public float speed = 0.5f;
-    private Vector3 moveVector;
+    public float speed = 10f;
+    private Rigidbody _rb;
+    [SerializeField]private Transform _tr;
+    float HInput;
+    float VInput;
+    Vector3 moveDir;
 
-    void Awake()
+    void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
     }
-
-    void Update()
+    private void Update()
     {
-        moveVector.x = Input.GetAxis("Horizontal");
-        moveVector.z = Input.GetAxis("Vertical");
-        rb.MovePosition(rb.position + moveVector * speed * Time.deltaTime);
+        Movement();
+    }
+    void FixedUpdate()
+    {
+        Move();
+    }
+    private void Movement()
+    {
+        HInput = Input.GetAxisRaw("Horizontal");
+        VInput = Input.GetAxisRaw("Vertical");
+    }
+    private void Move()
+    {
+        moveDir = _tr.forward * VInput + _tr.right * HInput;
+        _rb.AddForce(moveDir.normalized * speed, ForceMode.Force);
     }
 }

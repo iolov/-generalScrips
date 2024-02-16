@@ -4,24 +4,29 @@ using UnityEngine;
 
 public class cameraPhis : MonoBehaviour
 {
-    [SerializeField] float sens;
+    [SerializeField] float sensUp;
+    [SerializeField] float sensHor;
     [SerializeField] GameObject player;
     float xRot;
+    float yRot;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
-    void FixedUpdate()
+    void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * sens*100* Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * sens*100* Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * sensUp*100* Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * sensHor*100* Time.deltaTime;
 
+        yRot += mouseX;
         xRot -= mouseY;
+
         xRot = Mathf.Clamp(xRot, -90, 90);
         print(xRot);
 
-        transform.localRotation = Quaternion.Euler(xRot, 0f, 0f);
-        player.transform.Rotate(Vector3.up * mouseX*1.5f);
+        transform.rotation = Quaternion.Euler(xRot, yRot, 0);
+        player.transform.rotation = Quaternion.Euler(0, yRot, 0);
     }
 }
